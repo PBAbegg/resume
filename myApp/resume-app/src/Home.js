@@ -19,104 +19,99 @@ class Home extends Component {
         this.jobAdded = this.jobAdded.bind(this)
         this.contactAdded = this.contactAdded.bind(this)
         this.getJobs = this.getJobs.bind(this)
+        this.delete = this.delete.bind(this)
     }
-    componentDidMount(){
+    componentDidMount() {
         this.getJobs()
 
     }
-    getJobs () {
-        fetch('http://localhost:9000/jobs',{
-        method: "GET"
-    })
+    getJobs() {
+        fetch('http://localhost:9000/jobs', {
+            method: "GET"
+        })
             .then(response => response.json())
             .then(json => {
                 this.setState({
-                    jobs:json
+                    jobs: json
                 })
             })
-            .catch(err => {
-                this.setState({
-                    error: err.message
-                })
-            })
+            // .catch(err => {
+            //     this.setState({
+            //         error: err.message
+            //     })
+            // })
     }
+
     insert(job) {
         console.log("insert")
-        const jobInfo={
-            companyname: job.companyName,
-            dateapplied: job.dateApplied, 
-            contactinfo: job.contactInfo,   
-            additionalinfo: job.additionalInfo
+        const jobInfo = {
+            companyName: job.companyName,
+            dateApplied: job.dateApplied,
+            contactInfo: job.contactInfo,
+            additionalInfo: job.additionalInfo
         }
-        fetch('http://localhost:9000/jobs',{
+        fetch('http://localhost:9000/jobs', {
             method: "POST",
             headers: {
-                "Conent-Type" : "application/json"
+                "Content-Type": "application/json"
             },
             body: JSON.stringify(jobInfo)
         })
-        .then(response => response.json())
-        .then(response => {
-            //fetch doesnt return any data, nothing to call ecouse it is in componant JobsAppliedTo
-        })
-        .catch(err => {
-            this.setState({
-                error: err.message
+            .then(response => response.json())
+            .then(response => {
+                this.getJobs()
             })
-        })
+            // .catch(err => {
+            //     this.setState({
+            //         error: err.message
+            //     })
+            // })
     }
 
     update(job) {
-        console.log("update")
-        const jobInfo={
+        console.log("update", job)
+        const jobInfo = {
             companyname: job.companyName,
-            dateapplied: job.dateApplied, 
-            contactinfo: job.contactInfo,   
+            dateapplied: job.dateApplied,
+            contactinfo: job.contactInfo,
             additionalinfo: job.additionalInfo
         }
-        fetch('http://localhost:9000/jobs/${ID}',{ //dont have ID set
+        fetch(`http://localhost:9000/jobs/${job.ID}`, {
             method: "PUT",
             headers: {
-                "Conent-Type" : "application/json"
+                "Content-Type": "application/json"
             },
             body: JSON.stringify(jobInfo)
         })
-        .then(response => response.json())
-        .then(response => {
-            //fetch doesnt return any data, nothing to call ecouse it is in componant JobsAppliedTo
-        })
-        .catch(err => {
-            this.setState({
-                error: err.message
+            .then(response => response.json())
+            .then(response => {
+                this.getJobs()
             })
-        })
+            // .catch(err => {
+            //     this.setState({
+            //         error: err.message
+            //     })
+            // })
     }
 
-
-//------DELETE FUNCTION NEEDED-------
-
-
-// delete() {
-//     console.log("delete")
-//     fetch('http://localhost:9000/jobs/${ID}',{ //dont have ID set
-//         method: "DELETE"})
-//     .then(response => response.json())
-//     .then(response => {
-//         //fetch doesnt return any data, nothing to call ecouse it is in componant JobsAppliedTo
-//     })
-//     .catch(err => {
-//         this.setState({
-//             error: err.message
-//         })
-//     })
-// }
+    delete(ID) {
+       console.log("delete", ID)
+        fetch(`http://localhost:9000/jobs/${ID}`,{
+             method: "DELETE",
+        })
+        .then(() => {
+            this.getJobs()
+        })
+        // .catch(err => {
+        //     this.setState({
+        //         error: err.message
+        //     })
+        // })
+    }
 
 
 
     jobAdded(job) {
-        // this.setState({
-        //     jobs: [...this.state.jobs, job]
-        // })
         job.ID ? this.update(job) : this.insert(job)
     }
 
@@ -130,10 +125,11 @@ class Home extends Component {
             <Tabs>
                 <Tab label="Jobs Applied To" value="/">
                     <JobsAppliedTo jobs={this.state.jobs}
-                        jobSubmitted={this.jobAdded} />
+                        jobSubmitted={this.jobAdded}
+                        deleteJob={this.delete} />
                 </Tab>
                 <Tab label="Contacts" value="/Contacts">
-                    <Contacts contacts={this.state.contacts} 
+                    <Contacts contacts={this.state.contacts}
                         contactSubmitted={this.contactAdded} />
                 </Tab>
             </Tabs>

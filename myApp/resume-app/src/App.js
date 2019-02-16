@@ -31,8 +31,7 @@ export default class extends Component {
         .catch(err => {
             this.setState({errormessage: err.message})
         })
-        .then(response => {
-    //choose state or event, per ken = this.setState({ [array in this.state same as in constructor (call whatever)] : response}) 
+        .then(response => { 
             this.setState({})
         })
     }

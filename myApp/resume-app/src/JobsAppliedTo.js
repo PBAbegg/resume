@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 
 const DisplayJob = (props) => {
+    console.log(props.job)
     return (
-        <div>
+        <div onClick={props.onJobSelected}>
             <b>
                 COMPANY NAME: {props.job.companyName}
             </b>
@@ -21,39 +22,49 @@ const DisplayJob = (props) => {
 
 
 export default class extends Component {
-    // state = {Event: ''}
 
-    // class TextInput extends React.Component {
     constructor(props) {
         super(props);
         this.companyName = React.createRef()
         this.dateApplied = React.createRef()
         this.contactInfo = React.createRef()
         this.additionalInfo = React.createRef()
-        //   this.state = {value: ''};
+        this.state = {jobID:null};
 
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.handleSubmit = this.handleDelete.bind(this);
     }
 
     handleSubmit(event) {
         event.preventDefault();
 
         const newJob = {
-            //id: this.id.curent.value,
             companyName: this.companyName.current.value,
-            //props.jobsAndContacts.state.companyName: this.companyName.current.value,
             dateApplied: this.dateApplied.current.value,
             contactInfo: this.contactInfo.current.value,
             additionalInfo: this.additionalInfo.current.value,
         }
-        //this.is.current.value=''
-        // this.companyName.current.value=''
-        // this.dateApplied.current.value=''
-        // this.contactInfo.current.value=''
-        // this.additionalInfo.current.value=''
-        this.props.jobSubmitted(newJob)
-        //   this.setState({ Event: newJob });
+        this.state.jobID && (newJob.ID = this.state.jobID)
+        
         console.log(newJob)
+        this.props.jobSubmitted(newJob)
+        //console.log(newJob)
+    }
+
+    handleDelete(event) {
+        event.preventDefault();
+
+        this.state.jobID && this.props.deleteJob(this.state.jobID)
+    }
+
+    editJob(job) {
+        this.setState({
+            jobID:job.ID
+        })
+        this.companyName.current.value = job.companyName || ''
+        this.dateApplied.current.value = job.dateApplied || ''
+        this.contactInfo.current.value = job. contactInfo || ''
+        this.additionalInfo.current.value = job.additionalInfo || ''
     }
 
     render() {
@@ -74,11 +85,16 @@ export default class extends Component {
                     <input type="text" ref={this.additionalInfo} ></input>
                     <br></br>
                     <input type="submit" value="Submit"></input>
-                    {/* -------add delete button-------- */}
+                </form>
+                <form onSubmit={(e) => this.handleDelete(e)}>
+                <input type="submit" value="Delete"></input>
                 </form>
                 {this.props.jobs.map(job => {
-                    return <DisplayJob job={job} key={job.ID} />
+                    return <DisplayJob job={job} key={job.ID} onJobSelected={()=>this.editJob(job)}/>
                 })}
+                {/* {this.props.jobs.map(job => {
+                    return <DisplayJob job={job} key={job.ID} onJobSelected={()=>this.handleDelete(job)}/>
+                })} */}
                 {/* <DisplayJob job={ this.state.value } /> */}
             </div>
         )
