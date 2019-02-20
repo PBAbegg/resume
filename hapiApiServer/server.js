@@ -30,7 +30,7 @@ server.route({
     path:`/jobs`,
     handler:(request,h) => {
 
-        let strsql = '*'
+        console.log("GET /jobs request received")
 
         return new Promise(function(resolve, reject)
         {
@@ -45,8 +45,19 @@ server.route({
                     reject(error);
 
                 } else {
+                    console.log("returning response for GET /jobs")
+                    const jobs=results.map(row => {
+                        return{
+                            ID: row.ID,
+                            companyName: row.companyname,
+                            dateApplied: row.dateapplied,
+                            contactInfo: row.contactinfo,
+                            additionalInfo: row.additionalinfo
 
-                    resolve(results);
+                        }
+                    })
+
+                    resolve(jobs);
                 }
             }
            )
@@ -61,7 +72,7 @@ server.route({
     handler:(request,h) => {
 
         let strsql = '*'
-        let jobId = request.perams.ID
+        let jobId = request.params.ID
 
         return new Promise(function(resolve, reject)
         {
@@ -146,7 +157,7 @@ server.route({
                     reject(error);
 
                 } else {
-
+                console.log(results)
                     resolve(results);
                 }
             }
