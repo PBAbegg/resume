@@ -32,7 +32,8 @@ export default class extends Component {
         this.state = {jobID:null};
 
         this.handleSubmit = this.handleSubmit.bind(this);
-        this.handleSubmit = this.handleDelete.bind(this);
+        this.handleDelete = this.handleDelete.bind(this);
+        this.resetForm = this.resetForm.bind(this)
     }
 
     handleSubmit(event) {
@@ -48,13 +49,26 @@ export default class extends Component {
         
         console.log(newJob)
         this.props.jobSubmitted(newJob)
+        this.resetForm()
         //console.log(newJob)
+    }
+
+    resetForm(){
+
+        this.companyName.current.value = ""
+        this.dateApplied.current.value = ""
+        this.contactInfo.current.value = ""
+        this.additionalInfo.current.value = ""
+        this.setState({
+            jobID:null
+        })
     }
 
     handleDelete(event) {
         event.preventDefault();
 
         this.state.jobID && this.props.deleteJob(this.state.jobID)
+        this.resetForm()
     }
 
     editJob(job) {
