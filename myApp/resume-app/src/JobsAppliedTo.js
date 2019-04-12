@@ -50,7 +50,6 @@ export default class extends Component {
         console.log(newJob)
         this.props.jobSubmitted(newJob)
         this.resetForm()
-        //console.log(newJob)
     }
 
     resetForm(){
@@ -106,10 +105,6 @@ export default class extends Component {
                 {this.props.jobs.map(job => {
                     return <DisplayJob job={job} key={job.ID} onJobSelected={()=>this.editJob(job)}/>
                 })}
-                {/* {this.props.jobs.map(job => {
-                    return <DisplayJob job={job} key={job.ID} onJobSelected={()=>this.handleDelete(job)}/>
-                })} */}
-                {/* <DisplayJob job={ this.state.value } /> */}
             </div>
         )
     }
